@@ -51,12 +51,12 @@ The intuition behind the update is that the mean needs to be weighted by the rec
 The variance needs to be updated based on the harmonic sum of the two variances as intuitively it makes more sense for the distribution to get peakier as there is more information about the system and hence allowing for a more certain estimate of the position.
     
     
-\mu^{'} = \frac{\mu r^2 + \nu\sigma^2}{r^2 + \sigma^2}
-$$\sigma^{'} = \frac{1}{\frac{1}{r^2}+\frac{1}{\sigma^2}} $$    
+ 
     
 </font>
 
-
+\mu^{'} = \frac{\mu r^2 + \nu\sigma^2}{r^2 + \sigma^2}
+$$\sigma^{'} = \frac{1}{\frac{1}{r^2}+\frac{1}{\sigma^2}} $$   
 
 ```python
 def update(mean1, var1, mean2, var2):
