@@ -1,3 +1,4 @@
+![
 # Multi-Object Tracking using Kalman Filters and the Hungarian Algorithm
 
 <br>
@@ -29,7 +30,7 @@ The Kalman filter will be dealt with in the context of tracking the position of 
 
 A 1-D Kalman Filter to track an object moving along the x-axis will be implemented in order to gain an understanding.
 
-Assume a car moving along a road with it's position being measured and estimated. 
+Assume a car moving along a road with it's position being measured and estimated. ](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}) 
 
 In Kalman filters μ and σ2 representing a Gaussian distibution is taken as the best estimate for representing the probality distribution for the measured and estimated position of the car along the x-axis .
 
