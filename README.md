@@ -1,4 +1,4 @@
-![
+
 # Multi-Object Tracking using Kalman Filters and the Hungarian Algorithm
 
 <br>
@@ -52,8 +52,8 @@ The intuition behind the update is that the mean needs to be weighted by the rec
 The variance needs to be updated based on the harmonic sum of the two variances as intuitively it makes more sense for the distribution to get peakier as there is more information about the system and hence allowing for a more certain estimate of the position.
     
     
-$$\mu^{'} = \frac{\mu r^2 + \nu\sigma^2}{r^2 + \sigma^2}$$
-$$\sigma^{'} = \frac{1}{\frac{1}{r^2}+\frac{1}{\sigma^2}} $$    
+\mu^{'} = \frac{\mu r^2 + \nu\sigma^2}{r^2 + \sigma^2}
+\sigma^{'} = \frac{1}{\frac{1}{r^2}+\frac{1}{\sigma^2}}     
     
 </font>
 
@@ -75,8 +75,8 @@ def update(mean1, var1, mean2, var2):
 
 The predict step is straightforward. When the car moves it's new mean and variance will be same as the measurement but we also need to add in the the uncertainity of the motion which is ($u$ , $r^2$).
     
-$$\mu^{'} = \mu+u$$
-$$\sigma^{'} = \sigma^2 + r^2 $$    
+\mu^{'} = \mu+u
+\sigma^{'} = \sigma^2 + r^2     
     
 </font>
 
@@ -136,7 +136,7 @@ Now that a general intuition for what a Kalman Filter does is established, the 1
 The Kalman filter model assumes that the state of a system at a time $t$ evolved from the previous state at time $t-1$ according to the equation.
 
 
-$$ X_t = A_t X_{t-1} + Bu_t + w_t$$
+ X_t = A_t X_{t-1} + Bu_t + w_t
     
 Where ,<br>
    * $\bf{X_t}$ : State Vector and in our car example the [ position ; velocity ] vector.<br>
@@ -154,7 +154,7 @@ Where ,<br>
 ## System Measurements 
 <font size="4">
 
-$$ Y_t = H_tX_t + \nu_t$$
+ Y_t = H_tX_t + \nu_t
     
 Where ,<br>
    * $\bf{Y_t}$ : Vector of measurements <br>
@@ -164,8 +164,8 @@ Where ,<br>
    * $\bf{\nu_t}$ :  Measurement Noise with a covariance R <br>
     
 Note : $\textbf{w}_k and \textbf{v}_k$ represent the process noise vector with the covariance Q and the measurement noise vector with the covariance R, respectively. They are assumed statistically independent Gaussian noise with the normal probability distribution.
-    $$p(w) = N(0,Q)$$
-    $$p(\nu)=N(0,R)$$
+    p(w) = N(0,Q)
+    p(\nu)=N(0,R)
     
 </font>
 
@@ -189,38 +189,38 @@ The equations are divided into: <br>
 
 The state is predicted as follows using the Dynamic(Kinematic) modelling of the system disregarding the noise
 
-$$ X_t = A_t X_{t-1} + Bu_t $$
+ X_t = A_t X_{t-1} + Bu_t 
 
 Now the error covariance matrix  is given by 
-    $$P_k = E[(X^{true}_t -X_t)(X^{true}_t -X_t)^T]$$
+    P_k = E[(X^{true}_t -X_t)(X^{true}_t -X_t)^T]
     
-$$  {P}_k = A {P}_{k-1}A^T+ {Q} $$
+  {P}_k = A {P}_{k-1}A^T+ {Q} 
 
 For an object whose postion on the x-axis varies as:
-    $$X(t)= 3t - 0.75t^2$$
+    X(t)= 3t - 0.75t^2
     
 The equation for updating $X_t$ would look like 
-    $$ X_t = X_{t-1} + \dot{X_{t-1}}\Delta t + \frac{1}{2}\dot{\dot{X_t}}{\Delta t}^2$$
+     X_t = X_{t-1} + \dot{X_{t-1}}\Delta t + \frac{1}{2}\dot{\dot{X_t}}{\Delta t}^2
     
 And $\dot{X_t}$ is 
-    $$\dot{X_t} = \dot{X_{t-1}} + \dot{\dot{X_{t-1}}}\Delta t $$
+    \dot{X_t} = \dot{X_{t-1}} + \dot{\dot{X_{t-1}}}\Delta t 
     
 And $\dot{\dot{X_{t-1}}}$ is a constant in this case
     
     
 Thus the state vector , which looks like, 
-    $$\bf{X_t}=\begin{bmatrix} X_t \\ \dot{X_t}\end{bmatrix}= \begin{bmatrix} X_{t-1} + \dot{X_{t-1}}\Delta t + \frac{1}{2}\dot{\dot{X_t}}{\Delta t}^2 \\ \dot{X_{t-1}} + \dot{\dot{X_{t-1}}}\Delta t \end{bmatrix} $$
+    \bf{X_t}=\begin{bmatrix} X_t \\ \dot{X_t}\end{bmatrix}= \begin{bmatrix} X_{t-1} + \dot{X_{t-1}}\Delta t + \frac{1}{2}\dot{\dot{X_t}}{\Delta t}^2 \\ \dot{X_{t-1}} + \dot{\dot{X_{t-1}}}\Delta t \end{bmatrix} 
 
 
 This can be rewriiten as 
 
 
-$$\bf{X_t}=\begin{bmatrix} X_t \\ \dot{X_t}\end{bmatrix}= \begin{bmatrix} 1 & \Delta t \\ 0 & 1 \end{bmatrix} \begin{bmatrix} X_{t-1} \\ \dot{X_{t-1}}\end{bmatrix} + \begin{bmatrix}\frac{1}{2}{\Delta t}^2  \\ \Delta t\end{bmatrix} \dot{\dot{X_{t-1}}}$$
+\bf{X_t}=\begin{bmatrix} X_t \\ \dot{X_t}\end{bmatrix}= \begin{bmatrix} 1 & \Delta t \\ 0 & 1 \end{bmatrix} \begin{bmatrix} X_{t-1} \\ \dot{X_{t-1}}\end{bmatrix} + \begin{bmatrix}\frac{1}{2}{\Delta t}^2  \\ \Delta t\end{bmatrix} \dot{\dot{X_{t-1}}}
 
 So comparing this with the general equation allows us to conclude
 
-$$A =\begin{bmatrix} 1 & \Delta t \\ 0 & 1 \end{bmatrix} $$
-$$B = \begin{bmatrix}\frac{1}{2}{\Delta t}^2  \\ \Delta t\end{bmatrix}$$
+A =\begin{bmatrix} 1 & \Delta t \\ 0 & 1 \end{bmatrix} 
+B = \begin{bmatrix}\frac{1}{2}{\Delta t}^2  \\ \Delta t\end{bmatrix}
 
 Here acceleration can be thought of as the control input and B is the matrix that maps it to position and velocity. 
 </font>
@@ -231,22 +231,22 @@ Here acceleration can be thought of as the control input and B is the matrix tha
 <br>
 <font size="4">
     
-$$Y_t = H_tX_t + \nu_t$$    
+Y_t = H_tX_t + \nu_t    
     
 Here the error in measurement is 
     
-$$\nu_t = Y_t-H_tX_t$$
+\nu_t = Y_t-H_tX_t
     
 Knowing this the X_t is updated based on the equation 
     
-$$ X_t = X_t + K_t\nu_t$$<br>
-$$ X_t = X_t + K_t(Y_t-H_tX_t)$$
+ X_t = X_t + K_t\nu_t<br>
+ X_t = X_t + K_t(Y_t-H_tX_t)
 
 Here $K_t$ is called the $\bf{Kalman}$ $\bf{ Gain}$.<br>
 The Kalman gain is used to update $X_t$ after knowing the measurement $Y_t$.
     
 It can be thought of as the ratio 
-    $$K = \frac{E1}{E1+E2}$$
+    K = \frac{E1}{E1+E2}
 where,<br>
 
 * $\bf{E1}$: Error in Estimate from Predictor Equations 
@@ -257,26 +257,26 @@ If E2 is low then the Kalman Gain is closer to 1 thereby implying the measuremen
     
 In the general representation $K_t$ can be calculated as
     
-$${K}_t = \frac{{P}_tH^T}{H{P}_tH^T+ {R} }$$
+{K}_t = \frac{{P}_tH^T}{H{P}_tH^T+ {R} }
     
 Where $R$ is the measurement covariance matrix.
     
 The error covariance gets updated with the following equation that's derived based on least mean square approach
     
-$$ P_t = (I - K_tH_t)P_t $$
+ P_t = (I - K_tH_t)P_t 
     
     
 In the case of our car we measure only the position so the measurement $Y_t$ is just
     
-$$Y_t = X_t + \nu_t$$
+Y_t = X_t + \nu_t
     
-$$Y_t = \begin{bmatrix} 1 & 0 \end{bmatrix}\begin{bmatrix} X_t \\ \dot{X_t} \end{bmatrix} + \nu_t$$
+Y_t = \begin{bmatrix} 1 & 0 \end{bmatrix}\begin{bmatrix} X_t \\ \dot{X_t} \end{bmatrix} + \nu_t
     
-$$Y_t = \begin{bmatrix} 1 & 0 \end{bmatrix}\bf{X_t} + \nu_t$$
+Y_t = \begin{bmatrix} 1 & 0 \end{bmatrix}\bf{X_t} + \nu_t
     
 Thus $H$ is just
     
-$$H = \begin{bmatrix} 1 & 0 \end{bmatrix}$$
+H = \begin{bmatrix} 1 & 0 \end{bmatrix}
  
 </font>
 
@@ -287,20 +287,20 @@ $$H = \begin{bmatrix} 1 & 0 \end{bmatrix}$$
     
 If $\sigma_x$ and $\sigma_{\dot{x}}$ are the standard deviations of the position and the velocity then the  Process Noise Covariance Q is 
     
-$$Q=\begin{bmatrix} {\sigma_x}^2 & \sigma_x\sigma_{\dot{x}}\\ \sigma_x\sigma_{\dot{x}} & \sigma_{\dot{x}}^2\end{bmatrix}$$
+Q=\begin{bmatrix} {\sigma_x}^2 & \sigma_x\sigma_{\dot{x}}\\ \sigma_x\sigma_{\dot{x}} & \sigma_{\dot{x}}^2\end{bmatrix}
 
 If $\sigma_{\dot{\dot{x}}}$ is the standard deviation of acceleration we can write
-$$ \sigma_x = \frac{\Delta t^2}{2} \sigma_{\dot{\dot{x}}}$$
-$$ \sigma_{\dot{x}} = \Delta t \sigma_{\dot{\dot{x}}}$$
+ \sigma_x = \frac{\Delta t^2}{2} \sigma_{\dot{\dot{x}}}
+ \sigma_{\dot{x}} = \Delta t \sigma_{\dot{\dot{x}}}
     
 Thus 
-$$ Q=\begin{bmatrix} \frac{\Delta t^4}{4} & \frac{\Delta t^3}{2}\\ \frac{\Delta t^3}{2} & \Delta t^2\end{bmatrix} \sigma_{\dot{\dot{x}}}^2
-$$ 
+ Q=\begin{bmatrix} \frac{\Delta t^4}{4} & \frac{\Delta t^3}{2}\\ \frac{\Delta t^3}{2} & \Delta t^2\end{bmatrix} \sigma_{\dot{\dot{x}}}^2
+ 
 
 And R is just a scalar as we measure only one variable ,that is position.
    
  
-$$R = \sigma_m^2$$
+R = \sigma_m^2
     
 Q and R are essential for correct updation of the error covariance matrix $P_t$
 
@@ -487,44 +487,44 @@ if __name__ == "__main__":
 The basic equations should remain the same as the 1D case with additional considerations for the other variable.
 Considering $X$ and $Y$ to be the concerned variables denoting the position the state vector should look like
     
-$$\bf{X_t}=\begin{bmatrix} X_t \\ Y_t \\\dot{X_t}\\ \dot{Y_t}\end{bmatrix}$$
+\bf{X_t}=\begin{bmatrix} X_t \\ Y_t \\\dot{X_t}\\ \dot{Y_t}\end{bmatrix}
     
 And by extension the can be related to the previous state vector as follows
     
-$$\bf{X_t}=\begin{bmatrix} X_t \\ Y_t \\\dot{X_t}\\ \dot{Y_t}\end{bmatrix}= \begin{bmatrix} X_{t-1} + \dot{X_{t-1}}\Delta t + \frac{1}{2}\dot{\dot{X_t}}{\Delta t}^2 \\  Y_{t-1} + \dot{Y_{t-1}}\Delta t + \frac{1}{2}\dot{\dot{Y_t}}{\Delta t}^2 \\ \dot{X_{t-1}} + \dot{\dot{X_{t-1}}}\Delta t \\ \dot{Y_{t-1}} + \dot{\dot{Y_{t-1}}}\Delta t \end{bmatrix} $$
+\bf{X_t}=\begin{bmatrix} X_t \\ Y_t \\\dot{X_t}\\ \dot{Y_t}\end{bmatrix}= \begin{bmatrix} X_{t-1} + \dot{X_{t-1}}\Delta t + \frac{1}{2}\dot{\dot{X_t}}{\Delta t}^2 \\  Y_{t-1} + \dot{Y_{t-1}}\Delta t + \frac{1}{2}\dot{\dot{Y_t}}{\Delta t}^2 \\ \dot{X_{t-1}} + \dot{\dot{X_{t-1}}}\Delta t \\ \dot{Y_{t-1}} + \dot{\dot{Y_{t-1}}}\Delta t \end{bmatrix} 
 
 This can be rewritten as
 
-$$\bf{X_t}=\begin{bmatrix} X_t \\ Y_t \\\dot{X_t}\\ \dot{Y_t}\end{bmatrix}= \begin{bmatrix} 1 & 0 &\Delta t & 0\\ 0 & 1 & 0 &\Delta t \\ 0 &0 &1 &0 \\ 0 & 0  & 0 & 1\end{bmatrix} \begin{bmatrix} X_{t-1} \\ Y_{t-1}\\\dot{X_{t-1}}\\\dot{Y_{t-1}}\end{bmatrix} + \begin{bmatrix}\frac{1}{2}{\Delta t}^2 & 0 \\0 & \frac{1}{2}{\Delta t}^2 \\ \Delta t & 0 \\0 & \Delta t \end{bmatrix} \begin{bmatrix}\dot{\dot{X_{t-1}}}\\\dot{\dot{Y_{t-1}}}\end{bmatrix} $$
+\bf{X_t}=\begin{bmatrix} X_t \\ Y_t \\\dot{X_t}\\ \dot{Y_t}\end{bmatrix}= \begin{bmatrix} 1 & 0 &\Delta t & 0\\ 0 & 1 & 0 &\Delta t \\ 0 &0 &1 &0 \\ 0 & 0  & 0 & 1\end{bmatrix} \begin{bmatrix} X_{t-1} \\ Y_{t-1}\\\dot{X_{t-1}}\\\dot{Y_{t-1}}\end{bmatrix} + \begin{bmatrix}\frac{1}{2}{\Delta t}^2 & 0 \\0 & \frac{1}{2}{\Delta t}^2 \\ \Delta t & 0 \\0 & \Delta t \end{bmatrix} \begin{bmatrix}\dot{\dot{X_{t-1}}}\\\dot{\dot{Y_{t-1}}}\end{bmatrix} 
 
 Which gives 
     
-$$ A =\begin{bmatrix} 1 & 0 &\Delta t & 0\\ 0 & 1 & 0 &\Delta t \\ 0 &0 &1 &0 \\ 0 & 0  & 0 & 1\end{bmatrix} ;B=\begin{bmatrix}\frac{1}{2}{\Delta t}^2 & 0 \\0 & \frac{1}{2}{\Delta t}^2 \\ \Delta t & 0 \\0 & \Delta t \end{bmatrix} $$ 
+ A =\begin{bmatrix} 1 & 0 &\Delta t & 0\\ 0 & 1 & 0 &\Delta t \\ 0 &0 &1 &0 \\ 0 & 0  & 0 & 1\end{bmatrix} ;B=\begin{bmatrix}\frac{1}{2}{\Delta t}^2 & 0 \\0 & \frac{1}{2}{\Delta t}^2 \\ \Delta t & 0 \\0 & \Delta t \end{bmatrix}  
     
 Since We're considering the case where velocity isn't being measured the $H$ matrix will look like
     
-$$H = \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 &0& 0 \end{bmatrix} $$
+H = \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 &0& 0 \end{bmatrix} 
 
     
 Also Process noise covariance Q and Measurement noise covariance R will look like 
     
-$$Q=\begin{bmatrix} {\sigma_x}^2 & 0 &\sigma_x\sigma_{\dot{x}}& 0\\0& {\sigma_y}^2 & 0 &\sigma_y\sigma_{\dot{y}}\\\sigma_x\sigma_{\dot{x}} &  0 &\sigma_{\dot{x}}^2 & 0\\ 0&\sigma_y\sigma_{\dot{y}} &  0 &\sigma_{\dot{y}}^2 \end{bmatrix}$$
+Q=\begin{bmatrix} {\sigma_x}^2 & 0 &\sigma_x\sigma_{\dot{x}}& 0\\0& {\sigma_y}^2 & 0 &\sigma_y\sigma_{\dot{y}}\\\sigma_x\sigma_{\dot{x}} &  0 &\sigma_{\dot{x}}^2 & 0\\ 0&\sigma_y\sigma_{\dot{y}} &  0 &\sigma_{\dot{y}}^2 \end{bmatrix}
     
 This is merely an extension of the 1D Q matrix where 0 is added in places where an x variable and y variable intersect as they are independednt of each other
     
 Now extending the same logic as last time 
 
-$$ \sigma_x = \frac{\Delta t^2}{2} \sigma_{\dot{\dot{x}}}$$
-$$ \sigma_{\dot{x}} = \Delta t \sigma_{\dot{\dot{x}}}$$
+ \sigma_x = \frac{\Delta t^2}{2} \sigma_{\dot{\dot{x}}}
+ \sigma_{\dot{x}} = \Delta t \sigma_{\dot{\dot{x}}}
     
 Thus 
-$$ Q=\begin{bmatrix} \frac{\Delta t^4}{4} & 0 &\frac{\Delta t^3}{2}& 0\\ 0 & \frac{\Delta t^4}{4} & 0 &\frac{\Delta t^3}{2}\\\frac{\Delta t^3}{2} &0  &\Delta t^2 & 0 \\ 0& \frac{\Delta t^3}{2} &0  &\Delta t^2 \end{bmatrix} \sigma_{\dot{\dot{x}}}^2
-$$
+ Q=\begin{bmatrix} \frac{\Delta t^4}{4} & 0 &\frac{\Delta t^3}{2}& 0\\ 0 & \frac{\Delta t^4}{4} & 0 &\frac{\Delta t^3}{2}\\\frac{\Delta t^3}{2} &0  &\Delta t^2 & 0 \\ 0& \frac{\Delta t^3}{2} &0  &\Delta t^2 \end{bmatrix} \sigma_{\dot{\dot{x}}}^2
+
 Here the same process noise is considered for x and y.
     
 The measurement noise R extends itself to 2D
 
-$$R = \begin{bmatrix}\sigma_x^2 & 0 \\ 0 &\sigma_y^2\end{bmatrix}$$
+R = \begin{bmatrix}\sigma_x^2 & 0 \\ 0 &\sigma_y^2\end{bmatrix}
     
 Q and R are essential for correct updation of the error covariance matrix $P_t$
 </font>
@@ -838,11 +838,11 @@ The minimum weight/cost matching will allow us to correctly ID the objects from 
 The greedy solution to the problem is to check the min dist cost match among all the possible matchings object and then assign the ID.
 Considering there are N object IDs and N detections the number of iterations are 
     
-$$Iterations = N(N-1)(N-2) ....... 1$$
+Iterations = N(N-1)(N-2) ....... 1
 
 Thus the complexity becomes 
 
-$$Complexity = O(N(N-1)(N-2) ....... 1) = O(N!)$$
+Complexity = O(N(N-1)(N-2) ....... 1) = O(N!)
     
 This is highly undesirable as the assignment needs to be done for every frame. Thereby rendering it very computationally intensive. 
     
@@ -857,13 +857,13 @@ This is highly undesirable as the assignment needs to be done for every frame. T
 <font size="4">
 The bipartite graph can be represnted as an adjacency matrix as shown
     
-$$ Adjacency =\begin{bmatrix} dist_{11}  & dist_{12} & dist_{13} & .... & dist_{1M} \\ 
+ Adjacency =\begin{bmatrix} dist_{11}  & dist_{12} & dist_{13} & .... & dist_{1M} \\ 
 dist_{21}  & dist_{22} & dist_{23} & .... & dist_{2M}
 \\.  & . & . & ..... & .
 \\.  & . & . & ..... & .
 \\.  & . & . & ..... & .
 \\ dist_{N1}  & dist_{N2} & dist_{N3} & .... & dist_{NM}\end{bmatrix}
-$$
+
 
 Now the Hungarian Algorithm helps us arrive at the final optimal assignment using a few steps that involve row and column reduction on the adjacency matrix. 
     
@@ -1378,4 +1378,3 @@ if __name__ == "__main__":
 
     main()
 ```
-](https://latex.codecogs.com/svg.latex?x%3D%5Cfrac%7B-b%5Cpm%5Csqrt%7Bb%5E2-4ac%7D%7D%7B2a%7D)
