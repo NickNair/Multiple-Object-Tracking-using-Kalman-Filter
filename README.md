@@ -1,13 +1,5 @@
 # Multi-Object Tracking using Kalman Filters and the Hungarian Algorithm
 
-<br>
-<font size="4">
-    $\bf{Group Members}$ <br><br>
-    Ayush Saran : 181EE114<br>
-    Nikhil Nair : 181EE131<br>
-    Manav Singhal: 181EE157 <br>
-    Suraj Kulkarni :181EE248<br>
-</font>
 
 # What is a Kalman Filter ?
 
